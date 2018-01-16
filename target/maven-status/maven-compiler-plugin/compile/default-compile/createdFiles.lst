@@ -1,0 +1,10 @@
+com/kaluzny/domain/BookRepository.class
+com/kaluzny/domain/Book.class
+com/kaluzny/Application.class
+com/kaluzny/domain/CustomerRepository.class
+com/kaluzny/domain/Token.class
+com/kaluzny/web/TokenRestController.class
+com/kaluzny/web/CustomerRestController.class
+com/kaluzny/domain/Customer.class
+com/kaluzny/domain/TokenRepository.class
+com/kaluzny/web/BookRestController.class
