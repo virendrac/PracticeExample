@@ -1,14 +1,18 @@
 package com.kaluzny.web;
 
-import com.kaluzny.domain.Customer;
+import com.kaluzny.domain.*;
 import com.kaluzny.domain.CustomerRepository;
-import com.kaluzny.domain.CustomerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/customers")
@@ -20,6 +24,12 @@ public class CustomerRestController {
     public void setRepository(CustomerRepository repository) {
         this.repository = repository;
     }
+
+    @Autowired
+    private ServiceCounterRestController serviceCounterRestController;
+
+    @Autowired
+    private TokenRestController tokenRestController;
 
     @RequestMapping(
             method = RequestMethod.POST)
@@ -74,5 +84,21 @@ public class CustomerRestController {
             method = RequestMethod.DELETE)
     public void deleteAllCustomers() {
         repository.deleteAll();
+    }
+
+
+    @RequestMapping(
+            path = "/display",
+            method = RequestMethod.GET)
+    public ResponseEntity<Map<Long, List<Long>>> displayCounterTokenList() {
+        Map<Long, List<Long>> mapTokenCounter = new HashMap<>();
+        List<ServiceCounter> counterlist= (List<ServiceCounter>) serviceCounterRestController.getAllServiceCounters().getBody();
+        for(int i=0;i<counterlist.size();i++){
+            List<Token> l=tokenRestController.getAllTokens(counterlist.get(i).getId());
+            mapTokenCounter.put(counterlist.get(i).getId(),l.stream().map(t-> t.getId()).collect(Collectors.toList()));
+
+        }
+
+        return new ResponseEntity<>(mapTokenCounter, HttpStatus.OK);
     }
 }

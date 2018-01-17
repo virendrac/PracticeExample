@@ -8,4 +8,8 @@ import java.util.List;
 @RepositoryRestResource
 public interface TokenRepository extends JpaRepository<Token, Long> {
 //    List<Token> findByName(String name);
+
+//    void VOID
+//    void updateTokenStatus(Token token);
+        List<Token> findByServiceCounterId (long serviceCounterId);
 }

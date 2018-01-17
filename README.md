@@ -21,3 +21,15 @@ mvn spring-boot:run
 [http://localhost:8080/api/books](http://localhost:8080/api/books)
 
 ![alt tag](http://i.piccy.info/i9/6fe13c87057a456bf9d25c151197c4d9/1479742734/78918/1085055/restpro.jpg)
+
+
+# http://localhost:8080/api/tokens/ getting list of all tokens
+# http://localhost:8080/api/tokens/12 getting list of token with id = 12
+# http://localhost:8080/api/tokens/updateStatus/1/CREATED
+
+# http://localhost:8080/api/tokens/ POST
+ {
+        "customerId": 20,
+        "typeOfService": "P"
+ }
+

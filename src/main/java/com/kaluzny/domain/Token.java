@@ -13,13 +13,15 @@ public class Token {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     private Long customerId;
+    private String tokenStatus;
     private String typeOfService;
     private int priority;
     private long serviceCounterId;
 
-    public Token(Long id, Long customerId, String typeOfService, int priority) {
+    public Token(Long id, Long customerId,String tokenStatus, String typeOfService, int priority) {
         this.id = id;
         this.customerId = customerId;
+        this.tokenStatus = tokenStatus;
         this.typeOfService = typeOfService;
         this.priority = priority;
     }
@@ -67,11 +69,20 @@ public class Token {
         this.serviceCounterId = serviceCounterId;
     }
 
+    public String getTokenStatus() {
+        return tokenStatus;
+    }
+
+    public void setTokenStatus(String tokenStatus) {
+        this.tokenStatus = tokenStatus;
+    }
+
     @Override
     public String toString() {
         return "Token{" +
                 "id=" + id +
                 ", customerId=" + customerId +
+                ", tokenStatus='" + tokenStatus + '\'' +
                 ", typeOfService='" + typeOfService + '\'' +
                 ", priority=" + priority +
                 ", serviceCounterId=" + serviceCounterId +
