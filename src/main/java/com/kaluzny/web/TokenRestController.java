@@ -45,6 +45,7 @@ public class TokenRestController {
             }
             token.setTypeOfService(customer.getTypeOfService());
             token.setTokenStatus("CREATED");
+            token.setMessage("Operations to be performed:");
             if(token.getPriority() ==0 ){
                 token.setPriority(3);
             }
@@ -84,6 +85,7 @@ public class TokenRestController {
         currentToken.setTypeOfService(token.getTypeOfService());
         currentToken.setPriority(token.getPriority());
         currentToken.setServiceCounterId(token.getServiceCounterId());
+        currentToken.setMessage(token.getMessage());
 
 
         return new ResponseEntity<>(repository.save(currentToken), HttpStatus.OK);
@@ -119,6 +121,20 @@ public class TokenRestController {
         Token token = resp.getBody();
         token.setTokenStatus(status);
         repository.saveAndFlush(token);
+    }
+
+
+    @RequestMapping(
+            value = "updateMessage/{id}",
+            method = RequestMethod.PUT)
+    public ResponseEntity<Token> updateTokenMessage(@PathVariable("id") long id, @RequestBody Token token) {
+
+        Token currentToken = getTokenWithId(id).getBody();
+        //token.setId(token.getId());
+        currentToken.setMessage(currentToken.getMessage()+"/n"+token.getMessage());
+
+
+        return new ResponseEntity<>(repository.saveAndFlush(currentToken), HttpStatus.OK);
     }
 
     public List<Token> getAllTokens(Long id) {

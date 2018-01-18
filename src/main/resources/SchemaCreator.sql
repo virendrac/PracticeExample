@@ -9,9 +9,11 @@ CREATE TABLE customer (
 CREATE TABLE token (
     id INT  ,
     customer_id INT ,
+    token_status VARCHAR (10) DEFAULT 'CREATED',
     type_of_service VARCHAR(1),
     priority INT DEFAULT 3,
-    service_counter_id INT
+    service_counter_id INT,
+    message VARCHAR(1000) DEFAULT 'Operations to be performed:'
 );
 
 CREATE TABLE Service_Counter (

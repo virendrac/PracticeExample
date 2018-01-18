@@ -1,5 +1,6 @@
 ## Plain REST API CRUD with Spring Boot and PostgreSQL.
 
+
 [![Build Status](https://travis-ci.org/OKaluzny/spring-boot-rest-api-postgresql.svg?branch=master)](https://travis-ci.org/OKaluzny/spring-boot-rest-api-postgresql)
 
 ### Technology stack:
@@ -17,10 +18,13 @@
 mvn spring-boot:run
 ```
 
-### The view in the Postman: 
-[http://localhost:8080/api/books](http://localhost:8080/api/books)
+### The view in the Postman:
 
-![alt tag](http://i.piccy.info/i9/6fe13c87057a456bf9d25c151197c4d9/1479742734/78918/1085055/restpro.jpg)
+
+User Name : user
+Password : user
+
+#http://localhost:8080/api/customers/display :a service that displays a list of service counters and token numbers
 
 
 # http://localhost:8080/api/tokens/ getting list of all tokens
@@ -33,3 +37,8 @@ mvn spring-boot:run
         "typeOfService": "P"
  }
 
+
+http://localhost:8080/api/tokens/updateMessage/{tokenId} : PUT:
+{
+    "message" : "Message to be appended on the token"
+}

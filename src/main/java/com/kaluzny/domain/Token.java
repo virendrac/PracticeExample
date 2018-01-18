@@ -17,13 +17,16 @@ public class Token {
     private String typeOfService;
     private int priority;
     private long serviceCounterId;
+    private String message ;
 
-    public Token(Long id, Long customerId,String tokenStatus, String typeOfService, int priority) {
+    public Token(Long id, Long customerId,String tokenStatus, String typeOfService, int priority ,long serviceCounterId, String message) {
         this.id = id;
         this.customerId = customerId;
         this.tokenStatus = tokenStatus;
         this.typeOfService = typeOfService;
         this.priority = priority;
+        this.serviceCounterId = serviceCounterId;
+        this.message = message;
     }
 
     public Token() {
@@ -77,6 +80,14 @@ public class Token {
         this.tokenStatus = tokenStatus;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     @Override
     public String toString() {
         return "Token{" +
@@ -86,6 +97,7 @@ public class Token {
                 ", typeOfService='" + typeOfService + '\'' +
                 ", priority=" + priority +
                 ", serviceCounterId=" + serviceCounterId +
+                ", message='" + message + '\'' +
                 '}';
     }
 }
