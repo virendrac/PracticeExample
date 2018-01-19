@@ -12,5 +12,5 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
 //    void VOID
 //    void updateTokenStatus(Token token);
         List<Token> findByServiceCounterId (long serviceCounterId);
-        List<Token> findByServiceCounterIdOrderByPriorityAsc (long serviceCounterId);
+        List<Token> findByServiceCounterIdAndTokenStatusOrderByPriorityAsc (long serviceCounterId , String tokenStatus);
 }

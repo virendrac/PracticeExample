@@ -140,11 +140,11 @@ public class TokenRestController {
     @RequestMapping(
             value = "updateStatus/{id}/{status}",
             method = RequestMethod.PUT)
-    public void updateTokenStatusByID(@PathVariable("id") long id, @PathVariable("status") String status) {
+    public ResponseEntity<Token> updateTokenStatusByID(@PathVariable("id") long id, @PathVariable("status") String status) {
         ResponseEntity<Token> resp = getTokenWithId(id);
         Token token = resp.getBody();
         token.setTokenStatus(status);
-        repository.saveAndFlush(token);
+        return new ResponseEntity<>(repository.saveAndFlush(token), HttpStatus.OK);
     }
 
 
@@ -161,8 +161,27 @@ public class TokenRestController {
         return new ResponseEntity<>(repository.saveAndFlush(currentToken), HttpStatus.OK);
     }
 
-    public List<Token> getAllTokensOrderByPriorityAsc(Long id) {
-       return repository.findByServiceCounterIdOrderByPriorityAsc(id);
+    public List<Token> getAllTokensOrderByPriorityAsc(Long id ) {
+       return repository.findByServiceCounterIdAndTokenStatusOrderByPriorityAsc(id , "CREATED");
+    }
+
+
+    @RequestMapping(
+            value = "process/{id}",
+            method = RequestMethod.PUT)
+    public ResponseEntity<Token> processAndUpdateStatus(@PathVariable("id") long id, @RequestBody Token token) {
+        ResponseEntity<Token> resp=updateTokenMessage(id, token);
+
+        /*
+            We can write the business logic to serve the customer by performing business operations here.
+         */
+        token=resp.getBody();
+        if(resp.getStatusCode() == HttpStatus.OK){
+            return updateTokenStatusByID(id,"COMPLETED");
+        }else{
+            return updateTokenStatusByID(id,"CANCELLED");
+        }
+
     }
 
 }

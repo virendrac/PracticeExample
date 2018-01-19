@@ -22,10 +22,11 @@ mvn spring-boot:run
 User Name : user
 Password : user
 
-# GET : http://localhost:8080/api/customers/display :a service that displays a list of service counters and token numbers in order of serving priority based on token priority
+# GET : http://localhost:8080/api/customers/display :a service that displays a list of service counters and token numbers which are not yet processed, in order of serving priority based on token priority
 
 
 # GET : http://localhost:8080/api/tokens/ getting list of all tokens
+
 
 # POST : http://localhost:8080/api/tokens/ Creating new Tokens
 
@@ -38,6 +39,12 @@ Password : user
                                                 	"remarks" : "HIGHVALUE"
 
                                                 }
+
+# PUT : http://localhost:8080/api/tokens/process/{id} : for serving the customer token
+                {
+                	"message":"Loan process initiated"
+                }
+
 
 
 # http://localhost:8080/api/tokens/12 getting list of token with id = 12
