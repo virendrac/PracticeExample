@@ -3,14 +3,12 @@
 
 [![Build Status](https://travis-ci.org/OKaluzny/spring-boot-rest-api-postgresql.svg?branch=master)](https://travis-ci.org/OKaluzny/spring-boot-rest-api-postgresql)
 
-### Technology stack:
-
-* Spring Boot;
-* Spring Web;
-* Spring Data;
-* PostgreSQL database;
-* Hibernate;
-* Spring Security (as basic authentication).
+## Installation:
+Postgresql DB:
+DB Schema name: book_db
+DB Port: 5433
+username: postgres
+password: vc123456
 
 #####To run this application use:
 
