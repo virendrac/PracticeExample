@@ -24,10 +24,24 @@ mvn spring-boot:run
 User Name : user
 Password : user
 
-#http://localhost:8080/api/customers/display :a service that displays a list of service counters and token numbers
+# GET : http://localhost:8080/api/customers/display :a service that displays a list of service counters and token numbers in order of serving priority based on token priority
 
 
-# http://localhost:8080/api/tokens/ getting list of all tokens
+# GET : http://localhost:8080/api/tokens/ getting list of all tokens
+
+# POST : http://localhost:8080/api/tokens/ Creating new Tokens
+
+                1) BODY for new customer : {
+                   	"customer":"{             'name': 'Virendra Chouhan',        'phone': 1234567890,        'address': 'Jubilee Hills',        'typeOfService': 'R'    }" ,
+                   	"remarks" : "HIGHVALUE"
+                   }
+                2) BODY for Existing customer : {
+                                                	"token":"{'customerId': 20}" ,
+                                                	"remarks" : "HIGHVALUE"
+
+                                                }
+
+
 # http://localhost:8080/api/tokens/12 getting list of token with id = 12
 # http://localhost:8080/api/tokens/updateStatus/1/CREATED
 

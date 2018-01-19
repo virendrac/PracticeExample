@@ -4,6 +4,7 @@ import com.kaluzny.domain.Customer;
 import com.kaluzny.domain.ServiceCounter;
 import com.kaluzny.domain.Token;
 import com.kaluzny.domain.TokenRepository;
+import jdk.nashorn.internal.parser.JSONParser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import com.google.gson.*;
+
 import org.springframework.beans.factory.annotation.*;
 
 @RestController
@@ -30,32 +34,51 @@ public class TokenRestController {
 
     @RequestMapping(
             method = RequestMethod.POST)
-    public ResponseEntity<?> addToken(@RequestBody Token token) {
-        Customer customer=customerRestController.getCustomerWithId(token.getCustomerId()).getBody();
-        if(customer !=  null){
-            List<ServiceCounter> serviceCounters = (List<ServiceCounter>) serviceCounterRestController.getAllServiceCounters(customer.getTypeOfService()).getBody();
-            int tokens=repository.findByServiceCounterId(serviceCounters.get(0).getId()).size();
-            int index=0;
-            for(int i=1;i<serviceCounters.size();i++) {
+    public ResponseEntity<?> createToken(@RequestBody Map<String, Object> map) {
 
-                if(tokens > repository.findByServiceCounterId(serviceCounters.get(i).getId()).size()){
-                    tokens= repository.findByServiceCounterId(serviceCounters.get(i).getId()).size();
-                    index=i;
+        Gson gson= new Gson();
+        Token token= new Token();
+        Customer customer;
+        if(map.get("token")!=null) {
+            token=gson.fromJson((String)map.get("token"), Token.class);
+            customer = customerRestController.getCustomerWithId(token.getCustomerId()).getBody();
+            if (customer != null) {
+
+                List<ServiceCounter> serviceCounters = (List<ServiceCounter>) serviceCounterRestController.getAllServiceCounters(customer.getTypeOfService()).getBody();
+                int tokens = repository.findByServiceCounterId(serviceCounters.get(0).getId()).size();
+                int index = 0;
+                for (int i = 1; i < serviceCounters.size(); i++) {
+
+                    if (tokens > repository.findByServiceCounterId(serviceCounters.get(i).getId()).size()) {
+                        tokens = repository.findByServiceCounterId(serviceCounters.get(i).getId()).size();
+                        index = i;
+                    }
                 }
-            }
-            token.setTypeOfService(customer.getTypeOfService());
-            token.setTokenStatus("CREATED");
-            token.setMessage("Operations to be performed:");
-            if(token.getPriority() ==0 ){
-                token.setPriority(3);
-            }
-            token.setServiceCounterId(serviceCounters.get(index).getId());
-            return new ResponseEntity<>(repository.save(token), HttpStatus.CREATED);
-        }else{
+                token.setTypeOfService(customer.getTypeOfService());
+                token.setTokenStatus("CREATED");
+                token.setMessage("Operations to be performed:");
+                if (token.getPriority() == 0) {
+                    if(map.get("remarks").toString().equalsIgnoreCase("HIGHVALUE")){
+                        token.setPriority(1);
+                    }else {
+                        token.setPriority(3);
+                    }
+                }
+                token.setServiceCounterId(serviceCounters.get(index).getId());
+                return new ResponseEntity<>(repository.save(token), HttpStatus.CREATED);
+            } else {
 
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body("Customer Id doesn't exist!!!");
+                return ResponseEntity
+                        .status(HttpStatus.FORBIDDEN)
+                        .body("Customer Id doesn't exist,please create new Customer ");
+            }
+        }else{
+            customer=gson.fromJson((String)map.get("customer"), Customer.class);
+            customer= (Customer) customerRestController.addCustomer(customer).getBody();
+            token.setCustomerId(customer.getId());
+            map.put("token",token.toString());
+            return createToken(map);
+
         }
     }
 
@@ -86,6 +109,7 @@ public class TokenRestController {
         currentToken.setPriority(token.getPriority());
         currentToken.setServiceCounterId(token.getServiceCounterId());
         currentToken.setMessage(token.getMessage());
+
 
 
         return new ResponseEntity<>(repository.save(currentToken), HttpStatus.OK);
@@ -137,7 +161,8 @@ public class TokenRestController {
         return new ResponseEntity<>(repository.saveAndFlush(currentToken), HttpStatus.OK);
     }
 
-    public List<Token> getAllTokens(Long id) {
-       return repository.findByServiceCounterId(id);
+    public List<Token> getAllTokensOrderByPriorityAsc(Long id) {
+       return repository.findByServiceCounterIdOrderByPriorityAsc(id);
     }
+
 }

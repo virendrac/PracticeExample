@@ -94,7 +94,7 @@ public class CustomerRestController {
         Map<Long, List<Long>> mapTokenCounter = new HashMap<>();
         List<ServiceCounter> counterlist= (List<ServiceCounter>) serviceCounterRestController.getAllServiceCounters().getBody();
         for(int i=0;i<counterlist.size();i++){
-            List<Token> l=tokenRestController.getAllTokens(counterlist.get(i).getId());
+            List<Token> l=tokenRestController.getAllTokensOrderByPriorityAsc(counterlist.get(i).getId());
             mapTokenCounter.put(counterlist.get(i).getId(),l.stream().map(t-> t.getId()).collect(Collectors.toList()));
 
         }
