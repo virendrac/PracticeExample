@@ -162,7 +162,7 @@ public class TokenRestController {
     }
 
     public List<Token> getAllTokensOrderByPriorityAsc(Long id ) {
-       return repository.findByServiceCounterIdAndTokenStatusOrderByPriorityAsc(id , "CREATED");
+       return repository.findByServiceCounterIdAndTokenStatusLessThanOrderByPriorityAsc(id , "50");
     }
 
 
@@ -177,9 +177,36 @@ public class TokenRestController {
          */
         token=resp.getBody();
         if(resp.getStatusCode() == HttpStatus.OK){
-            return updateTokenStatusByID(id,"COMPLETED");
+            return updateTokenStatusByID(id,"90"); // COMPLETED = 90
         }else{
-            return updateTokenStatusByID(id,"CANCELLED");
+            return updateTokenStatusByID(id,"99"); //CANCELLED =99
+        }
+
+    }
+
+    @RequestMapping(
+            value = "tokenProcess/{id}",
+            method = RequestMethod.PUT)
+    public ResponseEntity<Token> multiCounterProcess(@PathVariable("id") long id, @RequestBody Map<String, Object> map) {
+        Gson gson= new Gson();
+        Token token=gson.fromJson((String)map.get("token"), Token.class);
+        ResponseEntity<Token> resp=updateTokenMessage(id, token);
+
+        /*
+            We can write the business logic to serve the customer by performing business operations here.
+         */
+        token=resp.getBody();
+        if(resp.getStatusCode() == HttpStatus.OK){
+            if(map.get("nextServiceCounter") !=null) {
+            token.setServiceCounterId(Long.parseLong(map.get("nextServiceCounter").toString()));
+            repository.saveAndFlush(token);
+                return updateTokenStatusByID(id,"20");//NEXTCNTR =20
+            }else{
+                return updateTokenStatusByID(id,"90");// COMPLETED = 90
+            }
+        }else{
+                return updateTokenStatusByID(id,"99"); //CANCELLED =99
+
         }
 
     }
